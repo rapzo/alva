@@ -1,5 +1,5 @@
 import Button, { Order } from '../../lsg/patterns/button';
-import { Chrome } from '../../component/container/chrome';
+import { ChromeContainer } from '../chrome/chrome-container';
 import { colors } from '../../lsg/patterns/colors';
 import Copy, { Size as CopySize } from '../../lsg/patterns/copy';
 import { remote } from 'electron';
@@ -14,13 +14,11 @@ import Link from '../../lsg/patterns/link';
 import { createMenu } from '../../electron/menu';
 import * as MobX from 'mobx';
 import { observer } from 'mobx-react';
-import { PageList } from '../../component/container/page-list';
 import * as PathUtils from 'path';
 import { PatternListContainer } from '../../component/container/pattern-list';
 import PatternsPane from '../../lsg/patterns/panes/patterns-pane';
 import { PreviewPaneWrapper } from '../../component/container/preview-pane-wrapper';
 import * as ProcessUtils from 'process';
-import { ProjectList } from '../../component/container/project-list';
 import { PropertyList } from '../../component/container/property-list';
 import PropertyPane from '../../lsg/patterns/panes/property-pane';
 import * as React from 'react';
@@ -39,14 +37,12 @@ export class App extends React.Component {
 
 	@MobX.observable protected activeTab: string = App.PATTERN_LIST_ID;
 	private ctrlDown: boolean = false;
-	@MobX.observable protected projectListVisible: boolean = false;
 	private shiftDown: boolean = false;
 
 	public constructor(props: {}) {
 		super(props);
 		this.handleTabNaviagtionClick = this.handleTabNaviagtionClick.bind(this);
 		this.handleMainWindowClick = this.handleMainWindowClick.bind(this);
-		this.handleChromeToggle = this.handleChromeToggle.bind(this);
 		this.handleCreateNewSpaceClick = this.handleCreateNewSpaceClick.bind(this);
 		this.handleOpenSpaceClick = this.handleOpenSpaceClick.bind(this);
 	}
@@ -63,10 +59,6 @@ export class App extends React.Component {
 		} catch (error) {
 			return null;
 		}
-	}
-
-	protected handleChromeToggle(evt: React.MouseEvent<HTMLElement>): void {
-		this.projectListVisible = !this.projectListVisible;
 	}
 
 	protected handleCreateNewSpaceClick(): void {
@@ -146,7 +138,6 @@ export class App extends React.Component {
 	public render(): JSX.Element {
 		// Todo: project and page don't update on page change
 		const project = store.getCurrentProject();
-		const title = `${project && project.getName()}`;
 		const styleguide = store.getStyleguide();
 		const previewFrame = project && project.getPreviewFrame();
 		const previewFramePath =
@@ -158,20 +149,12 @@ export class App extends React.Component {
 
 		return (
 			<Layout directionVertical handleClick={this.handleMainWindowClick}>
-				<Chrome
-					title={title}
-					handleClick={this.handleChromeToggle}
-					open={this.projectListVisible}
-				>
-					{project && <ProjectList open={this.projectListVisible} />}
-				</Chrome>
+				<ChromeContainer />
+
 				<MainArea>
 					{project && [
 						<SideBar key="left" directionVertical hasPaddings>
 							<ElementPane>
-								<Space sizeBottom={SpaceSize.L}>
-									<PageList />
-								</Space>
 								<ElementList />
 							</ElementPane>
 							<PatternsPane>
@@ -185,6 +168,7 @@ export class App extends React.Component {
 							</PropertyPane>
 						</SideBar>
 					]}
+
 					{!project && (
 						<SplashScreen>
 							<Space sizeBottom={SpaceSize.L}>
@@ -209,7 +193,9 @@ export class App extends React.Component {
 						</SplashScreen>
 					)}
 				</MainArea>
+
 				<IconRegistry names={IconName} />
+
 				{DevTools ? <DevTools /> : null}
 			</Layout>
 		);
