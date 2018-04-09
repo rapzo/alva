@@ -111,7 +111,7 @@
     "husky": "0.14.3",
     "isomorphic-fetch": "2.2.1",
     "lint-staged": "7.0.4",
-    "mobx-react-devtools": "4.2.15",
+    "mobx-react-devtools": "5.0.1",
     "prettier": "1.11.1",
     "standard-version": "4.3.0",
     "ts-config": "17.0.0",
