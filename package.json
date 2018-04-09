@@ -114,7 +114,7 @@
     "mobx-react-devtools": "4.2.15",
     "prettier": "1.11.1",
     "standard-version": "4.3.0",
-    "ts-config": "17.0.0",
+    "ts-config": "18.0.0",
     "tslint": "5.9.1",
     "typedoc": "0.11.1"
   },
